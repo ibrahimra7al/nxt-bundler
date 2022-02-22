@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+const executeCommand = require('./exec');
+
+(async () => {
+    await executeCommand(`node ./node_modules/@atypon/nxt-bundler/node_modules/.bin/webpack --config ./node_modules/@atypon/nxt-bundler/dist/server/server.js`);
+    try {
+        // await executeCommand(`./node_modules/.bin/webpack --config ./node_modules/@atypon/@atypon/nxt-bundler/dist/server/server.js`);
+    } catch(e) {
+    }
+
+})()
