@@ -6,7 +6,7 @@ import Utils from '../utils';
 type LoaderRules = Array<{
   use: Array<WebpackLoaderObject<any>>;
   test: RegExp | string;
-  exclude: RegExp;
+  exclude: RegExp | undefined;
 }>;
 
 export default abstract class Configs {
@@ -24,6 +24,7 @@ export default abstract class Configs {
   protected externals: Configuration['externals'] | undefined;
   protected externalsPresets: Configuration['externalsPresets'] | undefined;
   protected context: Configuration['context'] | undefined;
+  protected aliases: { [index: string]: string | false | string[] } | undefined;
 
   public get name(): string {
     return this._name;
@@ -70,6 +71,7 @@ export default abstract class Configs {
   protected buildPlugins(): webpack.WebpackPluginInstance[] {
     return this.plugins
       .filter((p) => !p.isOptimization)
+      .filter((p) => !p.isResolve)
       .map((p) => p.build())
       .filter((p) => Boolean(p))
       .reduce((prev: any, current) => {
@@ -116,7 +118,9 @@ export default abstract class Configs {
       },
       stats: 'minimal',
       resolve: {
-        plugins: this.buildResolvePlugins()
+        plugins: this.buildResolvePlugins(),
+        alias: this.aliases,
+        extensions: ['', '.js', '.json', '.jsx', '.ts', '.tsx', '.pug']
       },
       context: this.context,
       output: this.output

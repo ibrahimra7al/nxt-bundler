@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import config from './config';
 
-export default new config().build();
+export = new config().build();

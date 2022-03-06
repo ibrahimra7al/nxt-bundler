@@ -12,7 +12,7 @@ export default class NXT {
   public resolvePathRelativeToServer(relativePath: string): string {
     return this.filesystem.joinPaths(
       this.filesystem.getExecutionPath(),
-      `./node_modules/${this.nxtServerPackage}/`,
+      './' || `./node_modules/${this.nxtServerPackage}/`,
       relativePath
     );
   }
