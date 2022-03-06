@@ -52,16 +52,49 @@ export class TsTypeChecker extends Plugin {
 }
 
 export class TsPathsPlugin extends Plugin {
-  protected _name: string = 'TsconfigPathsPlugin';
-  protected _desc: string = 'Plugin to resolve typescript aliases';
+  protected _name: string = 'TsconfigPasthsPlugin';
+  protected _desc: string = 'Plugin tos resolve typescript aliases';
+  protected _isResolve: boolean = true;
 
   public init(): webpack.WebpackPluginInstance {
     const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-
     return new TsconfigPathsPlugin({
       configFile: tsConfigFile
     });
   }
 }
 
-export default [WebpackIgnoreModules, TsTypeChecker];
+export class shit extends Plugin {
+  protected _name: string = 'TsconfigPathsPlugin';
+  protected _desc: string = 'Plugin to resolve typescript aliases';
+  protected _isResolve: boolean = true;
+
+  public init(): webpack.WebpackPluginInstance {
+    const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+    var path = require('path');
+
+    function MyConventionResolver(source?: any, target?: any) {}
+
+    MyConventionResolver.prototype.apply = function (resolver?: any) {
+      resolver
+        .getHook('resolve')
+        .tapAsync(
+          { name: 'MyConventionResolver' },
+          function (request: any, resolveContext: any, callback: any) {
+            if (request.request[0] === '#') {
+              console.log('shit');
+              var req = request.request.substr(1);
+              var obj = Object.assign({}, request, {
+                request: req + '/' + path.basename(req) + '.js'
+              });
+              // return resolver.doResolve(target, obj, null, resolveContext, callback);
+            }
+            callback();
+          }
+        );
+    };
+    return new (MyConventionResolver as any)();
+  }
+}
+
+export default [WebpackIgnoreModules, TsTypeChecker, shit, TsPathsPlugin];

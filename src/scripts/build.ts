@@ -118,4 +118,4 @@ export class Build extends Script {
   }
 }
 
-export default () => (new Build()).init();
+export default () => new Build().init();
