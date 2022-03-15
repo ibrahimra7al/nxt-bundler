@@ -18,12 +18,15 @@ export default class MainConfigs extends Configs {
   protected aliases = this.getAliases();
 
   protected getEntryFiles() {
+    const clientEntry = Util.nxt.resolvePathRelativeToProject(
+      'node_modules/@atypon/nxt-utils/client/entry.ts'
+    );
     return Util.configs.environment === 'dev'
       ? [
           'webpack-hot-middleware/client?path=/__webpack_hmr&reload=true',
-          Util.nxt.resolvePathRelativeToProject('entry')
+          clientEntry
         ]
-      : [Util.nxt.resolvePathRelativeToProject('entry')];
+      : [clientEntry];
   }
 
   protected getContext() {
